@@ -84,7 +84,7 @@ class SandData(BaseModel):
     """创建时间"""
     sandImage: str
     """地图url"""
-    sentenceyelp: str
+    sentenceyelp: Optional[str] = None
 
 
 class SandInfo(BaseModel):

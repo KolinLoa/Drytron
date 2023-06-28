@@ -5,7 +5,9 @@ from nonebot.plugin import PluginMetadata
 from src.modules.group_info import GroupInfo
 from src.params import PluginConfig
 from src.utils.log import logger
-from src.utils.scheduler import scheduler
+from nonebot import require
+require("nonebot_plugin_apscheduler")
+from nonebot_plugin_apscheduler import scheduler
 
 from .data_source import get_sign_in
 
@@ -26,13 +28,14 @@ async def _(event: GroupMessageEvent):
     user_id = event.user_id
     group_id = event.group_id
     logger.info(f"<y>群{group_id}</y> | <g>{user_id}</g> | 请求签到")
-    msg = await get_sign_in(user_id, group_id)
+    msg = await get_sign_in(event, user_id, group_id)
     await sign.finish(msg)
 
 
-@scheduler.scheduled_job("cron", hour=0, minute=0)
-async def _():
+async def reset_sign_nums():
     """每天零点重置签到人数"""
     logger.info("正在重置签到人数")
     await GroupInfo.reset_sign_nums()
     logger.info("签到人数已重置")
+
+scheduler.add_job(reset_sign_nums, "cron", hour=0, minute=0, coalesce=True, timezone="Asia/Shanghai")

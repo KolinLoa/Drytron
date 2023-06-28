@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>签到</title>
+    <style>
+         body {
+            margin: 0;
+            padding: 0;
+        }
+        .bg-image {
+            background-image: url("./img/sign.png");
+            background-size: cover;
+            height: 100vh;
+            display: flex; /* 使用弹性盒子布局 */
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+        }
+        .text {
+            color: rgb(23, 63, 155);
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: left;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 308px;
+            width: 900px; /* 将网页的最大宽度设置为800像素 */
+            margin: 0 auto; 
+            font-family: "fx"; /* 将文本字体设置为fx.ttf */
+        }
+        @font-face {
+            font-family: "fx"; /* 定义字体名称 */
+            src: url("../template/css/fonts/fx.ttf"); /* 定义字体文件路径 */
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+</head>
+<body>
+    <div class="bg-image", id="main">
+        <div class="text">
+            <img src="https://q.qlogo.cn/g?b=qq&nk={{id}}&s=100" height="80" width="80">
+            <p>{{nickname}}</p>
+            <p>今日第{{sign_num}}名签到</p>
+            <p>今日运势{{today_lucky}}</p>
+            <p>获得金币{{today_gold}}（总金币：{{all_gold}}）</p>
+            <p>当前好感度：{{all_friendly}}</p>
+            <p>累计签到次数：{{sign_times}}</p>
+
+        </div>
+    </div>
+</body>
+</html>

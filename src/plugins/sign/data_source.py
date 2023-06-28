@@ -2,10 +2,11 @@ import random
 from datetime import date
 
 from httpx import AsyncClient
-from nonebot.adapters.onebot.v11 import Message, MessageSegment
+from nonebot.adapters.onebot.v11 import Message, MessageSegment, GroupMessageEvent
 
 from src.modules.group_info import GroupInfo
 from src.modules.user_info import UserInfo
+from src.utils.browser import browser
 from src.utils.log import logger
 
 from .config import FRIENDLY_ADD, GOLD_BASE, LUCKY_GOLD, LUCKY_MAX, LUCKY_MIN
@@ -13,8 +14,18 @@ from .config import FRIENDLY_ADD, GOLD_BASE, LUCKY_GOLD, LUCKY_MAX, LUCKY_MIN
 client = AsyncClient()
 """异步请求客户端"""
 
+async def get_nickname(
+    event: GroupMessageEvent
+):
+    if event.sender.card:
+        nickname = event.sender.card
+    else:
+        nickname = event.sender.nickname
+    return nickname
 
-async def get_sign_in(user_id: int, group_id: int) -> Message:
+
+
+async def get_sign_in(event: GroupMessageEvent, user_id: int, group_id: int) -> Message:
     """
     :说明
         用户签到
@@ -36,6 +47,12 @@ async def get_sign_in(user_id: int, group_id: int) -> Message:
         msg += MessageSegment.text("\n你今天已经签到了，不要贪心噢。")
         return msg
 
+    nickname = await get_nickname(event)
+
+
+
+
+
     # 头像
     qq_head = await _get_qq_img(user_id)
     msg_head = MessageSegment.image(qq_head)
@@ -54,12 +71,27 @@ async def get_sign_in(user_id: int, group_id: int) -> Message:
         lucky_gold=LUCKY_GOLD,
     )
 
-    msg_txt = f"本群第 {sign_num} 位 签到完成\n"
-    msg_txt += f'今日运势：{data.get("today_lucky")}\n'
-    msg_txt += f'获得金币：+{data.get("today_gold")}（总金币：{data.get("all_gold")}）\n'
-    msg_txt += f'当前好感度：{data.get("all_friendly")}\n'
-    msg_txt += f'累计签到次数：{data.get("sign_times")}'
-    msg += msg_head + MessageSegment.text(msg_txt)
+
+    pagename = "签到.html"
+    today_lucky = data.get("today_lucky")
+    today_gold = data.get("today_gold")
+    all_gold = data.get("all_gold")
+    all_friendly = data.get("all_friendly")
+    sign_times = data.get("sign_times")
+
+    img = await browser.template_to_image(
+        pagename=pagename,
+        sign_num=sign_num,
+        today_lucky=today_lucky,
+        today_gold=today_gold,
+        all_gold=all_gold,
+        all_friendly=all_friendly,
+        sign_times=sign_times,
+        nickname=nickname,
+        id=user_id,
+    )
+    msg = MessageSegment.image(img)
+
     logger.debug(f"<y>群{group_id}</y> | <g>{user_id}</g> | 签到成功")
     return msg
 

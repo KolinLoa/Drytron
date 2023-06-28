@@ -30,7 +30,11 @@ from src.params import (
 )
 from src.utils.browser import browser
 from src.utils.log import logger
-from src.utils.scheduler import scheduler
+from nonebot import require
+
+
+require("nonebot_plugin_apscheduler")
+from nonebot_plugin_apscheduler import scheduler
 from src.utils.utils import GroupList_Async
 
 from . import data_source as source
@@ -382,8 +386,7 @@ async def _(bot: Bot, event: PokeNotifyEvent):
 # -------------------------------------------------------------
 #   定时功能实现
 # -------------------------------------------------------------
-@scheduler.scheduled_job("cron", hour=0, minute=0)
-async def _():
+async def goodnight_notice():
     """晚安通知"""
     logger.info("<y>群管理</y> | 晚安通知 | 正在发送晚安通知")
     all_bot = get_bots()
@@ -394,7 +397,7 @@ async def _():
         count_failed = 0
         count_closed = 0
         time_start = time.time()
-        async for group_id in GroupList_Async(group_list):
+        for group_id in group_list:
             goodnight_status = await GroupInfo.get_config_status(
                 group_id, GroupSetting.晚安通知
             )
@@ -417,3 +420,8 @@ async def _():
         for user in superusers:
             msg = f"发送晚安完毕，共发送 {count_all} 个群\n发送成功 {count_success} 个\n发送失败 {count_failed} 个\n关闭通知 {count_closed}个\n用时 {time_use} 秒"
             await bot.send_private_msg(user_id=int(user), message=msg)
+
+scheduler.add_job(
+    goodnight_notice,
+    "cron", hour=0, minute=0, coalesce=True, timezone="Asia/Shanghai"
+)

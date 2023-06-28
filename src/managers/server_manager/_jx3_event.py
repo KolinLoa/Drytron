@@ -187,6 +187,57 @@ class NewsRecvEvent(RecvEvent):
         )
 
 
+@EventRister.rister(action=2003)
+class UpdateEvent(RecvEvent):
+    """更新推送事件"""
+
+    __event__ = "WsRecv.Update"
+    message_type = "Update"
+    old_version: str
+    """旧版本"""
+    new_version: str
+    """新版本"""
+    package_num: bool
+    """包数量"""
+    package_size: str
+    """包大小"""
+
+    @property
+    def log(self) -> str:
+        log = f"更新推送事件：[{self.old_version}]更新到[{self.new_version},更新包数量[{self.package_num}],更新包大小[{self.package_size}]]"
+        return log
+
+    @overrides(RecvEvent)
+    def get_message(self) -> Message:
+        return Message(f"更新推送：[{self.old_version}]更新到[{self.new_version},更新包数量[{self.package_num}],更新包大小[{self.package_size}]]")
+
+
+@EventRister.rister(action=2004)
+class BayibaEvent(RecvEvent):
+    """818推送事件"""
+
+    __event__ = "WsRecv.Bayiba"
+    message_type = "Bayiba"
+    server: str
+    """服务器"""
+    name: str
+    """贴吧名"""
+    title: str
+    """贴吧标题"""
+    url: str
+    """贴吧url链接"""
+    date: str
+    """贴吧日期"""
+
+    @property
+    def log(self) -> str:
+        log = f"818推送事件：标题[{self.title}],发生在[{self.server}],贴吧[{self.name}],链接[{self.url}],日期[{self.date}]"
+        return log
+
+    @overrides(RecvEvent)
+    def get_message(self) -> Message:
+        return Message(f"818推送：标题[{self.title}],发生在[{self.server}],贴吧[{self.name}],链接[{self.url}],日期[{self.date}]")
+
 @EventRister.rister(action=1001)
 class SerendipityEvent(RecvEvent):
     """奇遇播报事件"""
