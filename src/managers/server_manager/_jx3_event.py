@@ -188,7 +188,7 @@ class NewsRecvEvent(RecvEvent):
 
 
 @EventRister.rister(action=2003)
-class UpdateEvent(RecvEvent):
+class UpdateRecvEvent(RecvEvent):
     """更新推送事件"""
 
     __event__ = "WsRecv.Update"
@@ -197,7 +197,7 @@ class UpdateEvent(RecvEvent):
     """旧版本"""
     new_version: str
     """新版本"""
-    package_num: bool
+    package_num: int
     """包数量"""
     package_size: str
     """包大小"""
