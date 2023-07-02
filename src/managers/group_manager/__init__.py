@@ -386,7 +386,8 @@ async def _(bot: Bot, event: PokeNotifyEvent):
 # -------------------------------------------------------------
 #   定时功能实现
 # -------------------------------------------------------------
-async def goodnight_notice():
+@scheduler.scheduled_job("cron", hour=0, minute=0, coalesce=True, timezone="Asia/Shanghai")
+async def _():
     """晚安通知"""
     logger.info("<y>群管理</y> | 晚安通知 | 正在发送晚安通知")
     all_bot = get_bots()
@@ -397,7 +398,7 @@ async def goodnight_notice():
         count_failed = 0
         count_closed = 0
         time_start = time.time()
-        for group_id in group_list:
+        async for group_id in GroupList_Async(group_list):
             goodnight_status = await GroupInfo.get_config_status(
                 group_id, GroupSetting.晚安通知
             )
@@ -420,8 +421,3 @@ async def goodnight_notice():
         for user in superusers:
             msg = f"发送晚安完毕，共发送 {count_all} 个群\n发送成功 {count_success} 个\n发送失败 {count_failed} 个\n关闭通知 {count_closed}个\n用时 {time_use} 秒"
             await bot.send_private_msg(user_id=int(user), message=msg)
-
-scheduler.add_job(
-    goodnight_notice,
-    "cron", hour=0, minute=0, coalesce=True, timezone="Asia/Shanghai"
-)
