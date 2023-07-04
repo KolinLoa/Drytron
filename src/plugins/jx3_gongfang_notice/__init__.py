@@ -12,8 +12,8 @@ __plugin_meta__ = PluginMetadata(
 )
 
 
-@scheduler.scheduled_job("cron", hour="12", minute="20", day_of_week="sat,sun", id="weekly_all")
-async def weekly_all():
+@scheduler.scheduled_job("cron", day_of_week="sat,sun", hour="12", minute="20", id="afternoon_gf")
+async def afternoon_gf():
     logger.info(f"<y>攻防通知!</y>")
     bot = list(get_bots().values())[0]
     # 获取第一个机器人对象
@@ -26,8 +26,8 @@ async def weekly_all():
                                  message="阵营大攻防将于12:30开始排队，请大家准备好前往主城战场处按时排队，神行请提前十秒起飞！")
 
 
-@scheduler.scheduled_job("cron", hour="18", minute="20", day_of_week="sat,sun", id="weekly_all")
-async def weekly_all():
+@scheduler.scheduled_job("cron", day_of_week="sat,sun", hour="18", minute="20", id="eve_gf")
+async def eve_gf():
     logger.info(f"<y>攻防通知!</y>")
     bot = list(get_bots().values())[0]
     # 获取第一个机器人对象
@@ -40,8 +40,8 @@ async def weekly_all():
                                  message="阵营大攻防将于18:30开始排队，请大家准备好前往主城战场处按时排队，神行请提前十秒起飞！")
 
 
-@scheduler.scheduled_job("cron", hour="19", minute="20", day_of_week="tue,thu", id="weekly_all")
-async def weekly_all():
+@scheduler.scheduled_job("cron", day_of_week="tue,thu", hour="19", minute="20", id="eve_xgf")
+async def eve_xgf():
     logger.info(f"<y>攻防通知!</y>")
     bot = list(get_bots().values())[0]
     # 获取第一个机器人对象
@@ -54,8 +54,8 @@ async def weekly_all():
                                  message="阵营小攻防将于19:30开始排队，请大家准备好神行或者前往过图点，神行请提前十秒起飞！")
 
 
-@scheduler.scheduled_job("cron", hour="19", minute="50", day_of_week="wed,fri", id="weekly_all")
-async def weekly_all():
+@scheduler.scheduled_job("cron", day_of_week="wed,fri", hour="19", minute="50", id="world_boss")
+async def world_boss():
     logger.info(f"<y>世界BOSS通知!</y>")
     bot = list(get_bots().values())[0]
     # 获取第一个机器人对象

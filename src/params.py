@@ -79,6 +79,8 @@ class GroupSetting(Enum):
     奇遇推送 = auto()
     抓马监控 = auto()
     扶摇监控 = auto()
+    八一八推送 = auto()
+    更新推送 = auto()
 
 
 class NoticeType(Enum):

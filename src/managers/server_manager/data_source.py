@@ -33,6 +33,8 @@ async def get_ws_status(group_id: int, event: Event.RecvEvent) -> bool:
     if not bot_status:
         return False
 
+    recv_type = None
+
     if isinstance(event, Event.ServerStatusEvent):
         recv_type = GroupSetting.开服推送
     if isinstance(event, Event.NewsRecvEvent):
@@ -47,5 +49,10 @@ async def get_ws_status(group_id: int, event: Event.RecvEvent) -> bool:
         event, Event.FuyaoNamedEvent
     ):
         recv_type = GroupSetting.扶摇监控
+    if isinstance(event, Event.BayibaEvent):
+        recv_type = GroupSetting.八一八推送
+    if isinstance(event, Event.UpdRecvEvent):
+        recv_type = GroupSetting.更新推送
 
-    return await GroupInfo.get_config_status(group_id, recv_type)
+    if recv_type:
+        return await GroupInfo.get_config_status(group_id, recv_type)

@@ -188,10 +188,10 @@ class NewsRecvEvent(RecvEvent):
 
 
 @EventRister.rister(action=2003)
-class UpdateRecvEvent(RecvEvent):
+class UpdRecvEvent(RecvEvent):
     """更新推送事件"""
 
-    __event__ = "WsRecv.Update"
+    __event__ = "WsRecv.Upd"
     message_type = "Update"
     old_version: str
     """旧版本"""
@@ -204,12 +204,12 @@ class UpdateRecvEvent(RecvEvent):
 
     @property
     def log(self) -> str:
-        log = f"更新推送事件：[{self.old_version}]更新到[{self.new_version},更新包数量[{self.package_num}],更新包大小[{self.package_size}]]"
+        log = f"更新推送事件：[{self.old_version}]\n更新到[{self.new_version}]\n,更新包数量[{self.package_num}]\n,更新包大小[{self.package_size}]"
         return log
 
     @overrides(RecvEvent)
     def get_message(self) -> Message:
-        return Message(f"更新推送：[{self.old_version}]更新到[{self.new_version},更新包数量[{self.package_num}],更新包大小[{self.package_size}]]")
+        return Message(f"更新推送：[{self.old_version}] \n更新到[{self.new_version}]\n,更新包数量[{self.package_num}]\n,更新包大小[{self.package_size}]")
 
 
 @EventRister.rister(action=2004)
