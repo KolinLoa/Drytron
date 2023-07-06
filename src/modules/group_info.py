@@ -58,6 +58,10 @@ class GroupInfo(Model):
     """ws-抓马推送开关"""
     ws_fuyao = fields.BooleanField(default=True)
     """ws-扶摇推送开关"""
+    ws_Upd = fields.BooleanField(default=True)
+    """ws-更新推送开关"""
+    ws_bayiba = fields.BooleanField(default=True)
+    """ws-八一八推送开关"""
 
     class Meta:
         table = "group_info"
@@ -138,6 +142,7 @@ class GroupInfo(Model):
             * `bool`：开关状态
         """
         record = await cls.get_or_none(group_id=group_id)
+        status = None
         match setting_type:
             case GroupSetting.进群通知:
                 status = record.welcome_status
@@ -155,6 +160,10 @@ class GroupInfo(Model):
                 status = record.ws_horse
             case GroupSetting.扶摇监控:
                 status = record.ws_fuyao
+            case GroupSetting.更新推送:
+                status = record.ws_Upd
+            case GroupSetting.八一八推送:
+                status = record.ws_bayiba
         return status
 
     @classmethod
@@ -182,6 +191,10 @@ class GroupInfo(Model):
                 record.ws_server = status
             case GroupSetting.新闻推送:
                 record.ws_news = status
+            case GroupSetting.更新推送:
+                record.ws_Upd = status
+            case GroupSetting.八一八推送:
+                record.ws_bayiba = status
             case GroupSetting.奇遇推送:
                 record.ws_serendipity = status
             case GroupSetting.抓马监控:
@@ -273,6 +286,8 @@ class GroupInfo(Model):
             "ws_serendipity": record.ws_serendipity,
             "ws_horse": record.ws_horse,
             "ws_fuyao": record.ws_fuyao,
+            "ws_bayiba": record.ws_bayiba,
+            "ws_Upd": record.ws_Upd,
         }
 
     @classmethod
@@ -313,6 +328,7 @@ class GroupInfo(Model):
             * `list[dict]`：消息数组
         """
         record, _ = await cls.get_or_create(group_id=group_id)
+        data = None
         match notice_type:
             case NoticeType.晚安通知:
                 data = record.goodnight_text
